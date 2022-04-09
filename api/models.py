@@ -8,7 +8,7 @@ class StatusChoices(models.TextChoices):
     INACTIVE = 'inactive'
     DELETED = 'deleted'
 
-class doctor(models.Model):
+class Doctor(models.Model):
     name = models.CharField(max_length=256, blank=False)
     ssn = models.CharField(max_length=64, blank=False)
     status = models.CharField(max_length=16, choices=StatusChoices.choices, default= StatusChoices.ACTIVE)
@@ -35,5 +35,17 @@ class Contact(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE, related_name='contacts')
 
+class Speciality (models.Model):
+    name = models.CharField(max_length=256, null=False)
+    description = models.CharField(max_length=256)
+    parent = models.ForeignKey('self')
+    status = models.CharField(max_length=16, choices=StatusChoices.choices, default=StatusChoices.ACTIVE)
+    created_at = models.DateTimeField(auto_now_add=True, null=False)
+    updated_at = models.DateTimeField(auto_now=True, null=False)
 
-
+class DoctorSpecialities(models.Model):
+    doctor = models.ForeignKey(Doctor)
+    speciality = models.ForeignKey(Speciality)
+    status = models.CharField(max_length=16, choices=StatusChoices.choices, default=StatusChoices.ACTIVE)
+    created_at = models.DateTimeField(auto_now_add=True, null=False)
+    updated_at = models.DateTimeField(auto_now=True, null=False)
